@@ -76,7 +76,7 @@ class KMeans:
 
 
 training_set = []
-file = open("C:\Users\TRISHA NICOLE\Desktop\Machine Problem 2\kmdata1.txt", "r")
+file = open("data\kmdata1.txt", "r")
 
 
 for line in file:
@@ -86,18 +86,18 @@ for line in file:
 centroids = [[3,3], [6,2], [8,5]]
 part_one = KMeans(2, 300, 2, training_set, centroids)
 
-for i in range (0, 2):
+for i in range (0, 10):
 	curr_centroids = list(part_one.centroids)
 	ca = part_one.iteration()
 
-	ca_file = open("iter%d_ca.txt" % (i+1), "w+")
+	ca_file = open("output\iter%d_ca.txt" % (i+1), "w+")
 
 	for j in range(0, len(training_set)):
 		for x in range(0, len(ca)):
 			if j in ca[x]:
 				ca_file.write("%d\n" % (x+1))
 
-	ca_file = open("iter%d_cm.txt" % (i+1), "w+")
+	ca_file = open("output\iter%d_cm.txt" % (i+1), "w+")
 
 	for x in range(0,part_one.K+1):
 		for y in range(0,part_one.features_num):
