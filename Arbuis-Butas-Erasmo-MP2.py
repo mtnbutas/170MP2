@@ -1,5 +1,6 @@
 import math
 from PIL import Image
+import random
 
 class KMeans:
 
@@ -77,39 +78,39 @@ class KMeans:
 
 ############################# MAIN FOR PART 1 ##################################################
 
-
-# training_set = []
-# file = open("data\kmdata1.txt", "r")
-
-
-# for line in file:
-# 	training_set.append([float(i) for i in line.split()])
+def main1 ():
+	training_set = []
+	file = open("data\kmdata1.txt", "r")
 
 
-# centroids = [[3,3], [6,2], [8,5]]
-# part_one = KMeans(2, 300, 2, training_set, centroids)
+	for line in file:
+		training_set.append([float(i) for i in line.split()])
 
-# for i in range (0, 10):
-# 	curr_centroids = list(part_one.centroids)
-# 	ca = part_one.iteration()
 
-# 	ca_file = open("output\iter%d_ca.txt" % (i+1), "w+")
+	centroids = [[3,3], [6,2], [8,5]]
+	part_one = KMeans(2, 300, 2, training_set, centroids)
 
-# 	for j in range(0, len(training_set)):
-# 		for x in range(0, len(ca)):
-# 			if j in ca[x]:
-# 				ca_file.write("%d\n" % (x+1))
+	for i in range (0, 10):
+		curr_centroids = list(part_one.centroids)
+		ca = part_one.iteration()
 
-# 	ca_file = open("output\iter%d_cm.txt" % (i+1), "w+")
+		ca_file = open("output\iter%d_ca.txt" % (i+1), "w+")
 
-# 	for x in range(0,part_one.K+1):
-# 		for y in range(0,part_one.features_num):
-# 			ca_file.write("%f " % part_one.centroids[x][y])
-# 		ca_file.write("\n")
+		for j in range(0, len(training_set)):
+			for x in range(0, len(ca)):
+				if j in ca[x]:
+					ca_file.write("%d\n" % (x+1))
 
-# 	ca_file.write("J=%f\n" % part_one.J)
-# 	ca_file.write("dJ=%f\n" % (part_one.J - part_one.prev_J))
-# 	ca_file.close()
+		ca_file = open("output\iter%d_cm.txt" % (i+1), "w+")
+
+		for x in range(0,part_one.K+1):
+			for y in range(0,part_one.features_num):
+				ca_file.write("%f " % part_one.centroids[x][y])
+			ca_file.write("\n")
+
+		ca_file.write("J=%f\n" % part_one.J)
+		ca_file.write("dJ=%f\n" % (part_one.J - part_one.prev_J))
+		ca_file.close()
 
 ###########################PART 2 #################################################
 
@@ -118,18 +119,66 @@ class ImageExtraction:
 	def __init__(self):
 		self.data = []
 
+	# initialization with filename
 	def __init__(self, filename):
 		self.data = []
 		self.file_name = filename
 		self.img = Image.open(filename, 'r')
+		self.pixels = []
+
+	# extract RGB from image and store in pixels
+	def extractRGB(self):
+		self.pixels = list(self.img.getdata())
+		
 
 
 ########################### MAIN FOR PART 2 #################################################
 
+def centroidRandomizer(num, arr):
 
-imgExtraction = ImageExtraction('data\kmimg1.png')
+	centroids = [];
 
-pix_val = list(imgExtraction.img.getdata())
+	while len(centroids) < num:
+		# generate random number
+		r = random.randint(0, len(arr))
 
-print ("hello")
-print (pix_val)
+		# check if the random number is already in centroids
+		# add if it's not in the centroids
+		if arr[r] not in centroids:
+			centroids.append(arr[r])
+
+	return centroids
+
+def main2 ():
+	imgExtraction = ImageExtraction('data\kmimg1.png')
+
+	imgExtraction.extractRGB()
+
+	part_two = KMeans(16, len(imgExtraction.pixels), 3, imgExtraction.pixels, centroidRandomizer(16, imgExtraction.pixels))
+	ca = []
+
+	# run the KMeans iteration 10 times
+	for i in range (0, 10):
+		ca = part_two.iteration()
+
+	for i in range (0, len(part_two.centroids)):
+
+		# round off the centroids to the nearest integer
+		for j in range (0, len(part_two.centroids[i])):
+			part_two.centroids[i][j] = int(round(part_two.centroids[i][j]))
+
+		# the value of every pixel assigned to a cluster
+		# is converted to the value of the centroid 
+		for k in range (0, len(ca[i])):
+			imgExtraction.pixels[ca[i][k]] = tuple(part_two.centroids[i])
+
+
+	# convert the list to image
+	img2 = Image.new(imgExtraction.img.mode, imgExtraction.img.size)
+	img2.putdata(imgExtraction.pixels)
+	img2.save('data\compressed.png')
+
+# if you want to run the part 1 of the lab
+# main1()
+# if you want to run the part 2 of the lab
+main2()
