@@ -1,4 +1,5 @@
 import math
+from PIL import Image
 
 class KMeans:
 
@@ -74,37 +75,61 @@ class KMeans:
 
 		return cluster_assignments
 
-
-training_set = []
-file = open("data\kmdata1.txt", "r")
+############################# MAIN FOR PART 1 ##################################################
 
 
-for line in file:
-	training_set.append([float(i) for i in line.split()])
+# training_set = []
+# file = open("data\kmdata1.txt", "r")
 
 
-centroids = [[3,3], [6,2], [8,5]]
-part_one = KMeans(2, 300, 2, training_set, centroids)
+# for line in file:
+# 	training_set.append([float(i) for i in line.split()])
 
-for i in range (0, 10):
-	curr_centroids = list(part_one.centroids)
-	ca = part_one.iteration()
 
-	ca_file = open("output\iter%d_ca.txt" % (i+1), "w+")
+# centroids = [[3,3], [6,2], [8,5]]
+# part_one = KMeans(2, 300, 2, training_set, centroids)
 
-	for j in range(0, len(training_set)):
-		for x in range(0, len(ca)):
-			if j in ca[x]:
-				ca_file.write("%d\n" % (x+1))
+# for i in range (0, 10):
+# 	curr_centroids = list(part_one.centroids)
+# 	ca = part_one.iteration()
 
-	ca_file = open("output\iter%d_cm.txt" % (i+1), "w+")
+# 	ca_file = open("output\iter%d_ca.txt" % (i+1), "w+")
 
-	for x in range(0,part_one.K+1):
-		for y in range(0,part_one.features_num):
-			ca_file.write("%f " % part_one.centroids[x][y])
-		ca_file.write("\n")
+# 	for j in range(0, len(training_set)):
+# 		for x in range(0, len(ca)):
+# 			if j in ca[x]:
+# 				ca_file.write("%d\n" % (x+1))
 
-	ca_file.write("J=%f\n" % part_one.J)
-	ca_file.write("dJ=%f\n" % (part_one.J - part_one.prev_J))
-	ca_file.close()
+# 	ca_file = open("output\iter%d_cm.txt" % (i+1), "w+")
 
+# 	for x in range(0,part_one.K+1):
+# 		for y in range(0,part_one.features_num):
+# 			ca_file.write("%f " % part_one.centroids[x][y])
+# 		ca_file.write("\n")
+
+# 	ca_file.write("J=%f\n" % part_one.J)
+# 	ca_file.write("dJ=%f\n" % (part_one.J - part_one.prev_J))
+# 	ca_file.close()
+
+###########################PART 2 #################################################
+
+class ImageExtraction:
+
+	def __init__(self):
+		self.data = []
+
+	def __init__(self, filename):
+		self.data = []
+		self.file_name = filename
+		self.img = Image.open(filename, 'r')
+
+
+########################### MAIN FOR PART 2 #################################################
+
+
+imgExtraction = ImageExtraction('data\kmimg1.png')
+
+pix_val = list(imgExtraction.img.getdata())
+
+print ("hello")
+print (pix_val)
