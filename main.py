@@ -109,7 +109,7 @@ def main1 ():
 			ca_file.write("\n")
 
 		ca_file.write("J=%f\n" % part_one.J)
-		ca_file.write("dJ=%f\n" % (part_one.J - part_one.prev_J))
+		ca_file.write("dJ=%f\n" % (part_one.prev_J - part_one.J))
 		ca_file.close()
 
 ###########################PART 2 #################################################
@@ -150,7 +150,7 @@ def centroidRandomizer(num, arr):
 	return centroids
 
 def main2 ():
-	imgExtraction = ImageExtraction('data\kmimg1.png')
+	imgExtraction = ImageExtraction('data\\kmimg1.png')
 
 	imgExtraction.extractRGB()
 
@@ -176,7 +176,7 @@ def main2 ():
 	# convert the list to image
 	img2 = Image.new(imgExtraction.img.mode, imgExtraction.img.size)
 	img2.putdata(imgExtraction.pixels)
-	img2.save('data\compressed.png')
+	img2.save('compressed\compressed.png')
 
 # if you want to run the part 1 of the lab
 # main1()
